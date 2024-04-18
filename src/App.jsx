@@ -3,7 +3,6 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import ReactLoading from "react-loading";
 
-
 //components
 import FavPoke from "./components/FavPoke";
 import SearchPoke from "./components/SearchPoke";
@@ -16,15 +15,14 @@ function App() {
   const [pokeName, setPokeName] = useState(poke.name);
   const [fav, setFav] = useState([]);
 
-  Function
   const nextPoke = () => {
     const pokeId = ++poke.id;
-    setShowPoke(pokeId)
+    setShowPoke(pokeId);
   };
 
   const prevPoke = () => {
     const pokeId = --poke.id;
-    setShowPoke(pokeId)
+    setShowPoke(pokeId);
   };
 
   const searchHandler = (event) => {
@@ -34,11 +32,17 @@ function App() {
   };
 
   const addFav = () => {
-    setFav((prevState) => [poke, ...prevState]);
+    setFav((prevState) => [...prevState, poke]);
   };
+
+  const disLikePoke = (disLikeId) => {
+    console.log(disLikeId);
+    // const newFavPoke = fav.filter(()=>disLikeId)
+  }
+
   useEffect(() => {
-    setShowPoke("pikachu")
-  },[])
+    setShowPoke("pikachu");
+  }, []);
 
   useEffect(() => {
     let abortController = new AbortController();
@@ -63,7 +67,6 @@ function App() {
     };
 
     loadPoke();
-    
 
     return () => abortController.abort();
   }, [showPoke]);
@@ -74,25 +77,18 @@ function App() {
         <div>
           {loading ? (
             <div className="flex h-full justify-center items-center">
-            <ReactLoading
-              type="spokes"
-              color="black"
-              height={"15%"}
-              width={"15%"}
-            />
+              <ReactLoading
+                type="spokes"
+                color="black"
+                height={"15%"}
+                width={"15%"}
+              />
             </div>
           ) : (
             <>
               <h1 className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-white">
                 {poke?.name}
               </h1>
-              <button
-                className="py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
-                onClick={addFav}
-              >
-                Add to Favourite
-              </button>
-              <br />
               <img
                 src={poke?.sprites?.other?.home?.front_default}
                 alt={poke?.name}
@@ -104,19 +100,30 @@ function App() {
                 ))}
               </ul>
               <button
-                className="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700 mt-2"
+                className="py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 mt-2"
+                onClick={addFav}
+              >
+                Add to Favourite
+              </button>
+              <br />
+              <button
+                className="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
                 onClick={prevPoke}
               >
                 previos
               </button>
               <button
-                className="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700 mt-2"
+                className="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
                 onClick={nextPoke}
               >
                 next
               </button>
               <div>
-                <SearchPoke searchHandler={searchHandler} pokeName={pokeName} setPokeName={setPokeName} />
+                <SearchPoke
+                  searchHandler={searchHandler}
+                  pokeName={pokeName}
+                  setPokeName={setPokeName}
+                />
               </div>
             </>
           )}
@@ -126,7 +133,7 @@ function App() {
             Your favourite Pokemon
           </h3>
           {fav.length > 0 ? (
-            <FavPoke fav={fav} />
+            <FavPoke fav={fav} disLikePoke={disLikePoke} />
           ) : (
             <div className="flex h-full justify-center items-center">
               <p>No favourite Pokemon</p>

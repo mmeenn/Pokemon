@@ -1,10 +1,13 @@
 import React from "react";
 import { MdOutlineCatchingPokemon } from "react-icons/md";
 
-function SearchPoke({searchHandler, pokeName, setPokeName}) {
+function SearchPoke({ searchHandler, pokeName, setPokeName }) {
   return (
     <div>
-      <form onSubmit={searchHandler} className="flex items-center max-w-sm mx-auto">
+      <form
+        onSubmit={searchHandler}
+        className="flex items-center max-w-sm mx-auto"
+      >
         <label htmlFor="simple-search" className="sr-only">
           Search
         </label>
