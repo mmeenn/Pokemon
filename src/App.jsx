@@ -16,12 +16,12 @@ function App() {
   const [fav, setFav] = useState([]);
 
   const nextPoke = () => {
-    const pokeId = ++poke.id;
+    const pokeId = poke.id+1;
     setShowPoke(pokeId);
   };
 
   const prevPoke = () => {
-    const pokeId = --poke.id;
+    const pokeId = poke.id-1;
     setShowPoke(pokeId);
   };
 
@@ -31,13 +31,19 @@ function App() {
     setPokeName("");
   };
 
-  const addFav = () => {
-    setFav((prevState) => [...prevState, poke]);
+  const addFav = (pokeData) => {
+    const newFavPoke = {...pokeData}
+    const foundId = fav.find((e)=>e.id===newFavPoke.id)
+    if(foundId){
+      alert("Have this pokemon");
+    } else{
+      setFav([...fav, newFavPoke]);
+    }
   };
 
-  const disLikePoke = (disLikeId) => {
-    console.log(disLikeId);
-    // const newFavPoke = fav.filter(()=>disLikeId)
+  const unLikePoke = (disLikeId) => {
+    const newFavPoke = fav.filter((e)=> e.id !== disLikeId)
+    setFav(newFavPoke)
   }
 
   useEffect(() => {
@@ -71,12 +77,13 @@ function App() {
     return () => abortController.abort();
   }, [showPoke]);
 
+
   return (
-    <div className="max-w-5xl p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+    <div className="max-w-5xl p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 min-w-[942px] min-h-[785px]">
       <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2">
         <div>
           {loading ? (
-            <div className="flex h-full justify-center items-center">
+            <div className="flex h-full justify-center items-center min-w-[487px] min-h-[788px]">
               <ReactLoading
                 type="spokes"
                 color="black"
@@ -85,13 +92,14 @@ function App() {
               />
             </div>
           ) : (
-            <>
+            <div className="min-w-[487px] min-h-[788px]">
               <h1 className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-white">
                 {poke?.name}
               </h1>
               <img
                 src={poke?.sprites?.other?.home?.front_default}
                 alt={poke?.name}
+                className="min-w-[487px] min-h-[487px]"
               />
               <ul>
                 <h3 className="text-xl font-bold dark:text-white">Ability</h3>
@@ -101,7 +109,7 @@ function App() {
               </ul>
               <button
                 className="py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 mt-2"
-                onClick={addFav}
+                onClick={()=>{addFav(poke)}}
               >
                 Add to Favourite
               </button>
@@ -125,7 +133,7 @@ function App() {
                   setPokeName={setPokeName}
                 />
               </div>
-            </>
+            </div>
           )}
         </div>
         <div>
@@ -133,7 +141,7 @@ function App() {
             Your favourite Pokemon
           </h3>
           {fav.length > 0 ? (
-            <FavPoke fav={fav} disLikePoke={disLikePoke} />
+            <FavPoke fav={fav} unLikePoke={unLikePoke} />
           ) : (
             <div className="flex h-full justify-center items-center">
               <p>No favourite Pokemon</p>
